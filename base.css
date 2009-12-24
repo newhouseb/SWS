@@ -1,0 +1,12 @@
+body {
+    font-family: helvetica;
+    background: #dfe;
+}
+
+a {
+    color: SpringGreen;
+}
+
+.selected {
+    font-weight: bold;
+}

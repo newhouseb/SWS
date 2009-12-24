@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/?other/
+RewriteCond %{REQUEST_URI} !\.[a-z]{3,4}$
+RewriteRule [^.]? index.php?rw=t&p=%{REQUEST_URI} [L] 

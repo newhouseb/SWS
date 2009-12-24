@@ -1,0 +1,10 @@
+<site title="My Page" css="/base.css" template="base.tmpl">
+    <page link="Home">
+        <header>Welcome</header>
+        <content>Thanks for visiting</content>
+    </page>
+    <page link="About">
+        <header>About this page</header>
+        <content>This page was made with <a href="http://bennewhouse.com/open_source/simple_website_schema">Simple Website Schema</a></content>
+    </page>
+</site>
