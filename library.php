@@ -11,7 +11,7 @@ function populate(&$html, &$dict, &$links, &$path, $norw) {
         }
         if(in_array($target, $links)) {
             if($norw)
-                $html->getAttributeNode("href")->nodeValue = "/?p=".$target;
+                $html->getAttributeNode("href")->nodeValue = $path."/?p=".$target;
             else 
                 $html->getAttributeNode("href")->nodeValue = $target;
         }
@@ -243,7 +243,7 @@ function renderPage($template, $page, $rw, $basepath="/") {
         return $html->saveHTML();
 }
 
-function compilePages($template) {
+function compilePages($template, $filepath, $urlpath="/") {
         // Get Simple Website Schema
         $xml = new DOMDocument();
         $xml->load($template);
@@ -265,19 +265,19 @@ function compilePages($template) {
             }
 
             // TODO: Sanitize these
-            echo $path."...";
-            @mkdir("compiled/".trim($path,"/"), 0777, TRUE);
-            $fh = fopen("compiled/".trim($path,"/")."/index.html", "w");
-            fwrite($fh, renderPage($template, $path, TRUE));
+            //echo $path."...";
+            @mkdir(rtrim($filepath,"/")."/".trim($path,"/"), 0777, TRUE);
+            $fh = fopen(rtrim($filepath,"/")."/".trim($path,"/")."/index.html", "w");
+            fwrite($fh, renderPage($template, $path, TRUE, rtrim($urlpath,"/")."/"));
             fclose($fh);
             
             //We need to generate the default index under to title too
             if ($home === TRUE) {
-                $fh = fopen("compiled/index.html", "w");
-                fwrite($fh, renderPage($template, $path, TRUE));
+                $fh = fopen(rtrim($filepath,"/")."/index.html", "w");
+                fwrite($fh, renderPage($template, $path, TRUE, rtrim($urlpath,"/")."/"));
                 fclose($fh);
                 $home = FALSE;
             }
-            echo " done<br />";
+            //echo " done<br />";
         }
 }

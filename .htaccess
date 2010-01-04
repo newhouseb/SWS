@@ -1,4 +1,13 @@
 RewriteEngine On
-RewriteCond %{REQUEST_URI} !^/?other/
+
+# Ensure we have ending slashes, so relative links work properly
+RewriteCond %{REQUEST_URI} !/?other/?$
+RewriteCond %{REQUEST_URI} !compiled
 RewriteCond %{REQUEST_URI} !\.[a-z]{3,4}$
-RewriteRule [^.]? index.php?rw=t&p=%{REQUEST_URI} [L] 
+RewriteRule [^.]?[^/]$ %{REQUEST_URI}/ [R=301,L] 
+
+# Pass off to SWS
+RewriteCond %{REQUEST_URI} !/?other/?$
+RewriteCond %{REQUEST_URI} !compiled
+RewriteCond %{REQUEST_URI} !\.[a-z]{3,4}$
+RewriteRule [^.]?/$ index.php?rw=t&p=%{REQUEST_URI} [L] 

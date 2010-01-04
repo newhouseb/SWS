@@ -1,18 +1,23 @@
-<site title="My Page" css="base.css" template="base.tmpl">
+<site title="My Page" css="/test_sws/base.css" template="base.tmpl" 
+        filepath="compiled" urlpath="/test_sws/compiled">
     <page link="Home">
         <header>Welcome</header>
         <content>Thanks for visiting</content>
     </page>
     <page link="About">
         <header>About this page</header>
-        <content>This page was made with <a href="http://bennewhouse.com/open_source/simple_website_schema">Simple Website Schema</a></content>
+        <content>This page was made with 
+            <a href="http://bennewhouse.com/open_source/simple_website_schema">
+                Simple Website Schema
+            </a>
+        </content>
         <subpages>
-            <page link="A">
+            <page link="Subpage A">
                 <content>
-                    <a href="A">wee</a>
+                    <a href="../Subpage B">Next Page</a>
                 </content>
             </page>
-            <page link="B">
+            <page link="Subpage B">
             </page>
         </subpages>
     </page>
