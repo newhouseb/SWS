@@ -11,7 +11,7 @@ Extend on XHTML such that a single file can describe not only a single page, but
 template.sws
 
     <site title="John Doe" template="default.tmpl" css="main.css">
-        <page link="Home">
+        <page link="" name="Home">
             <header>My Home Page</header>
             <content>
                 <p>Hello World!</p>
