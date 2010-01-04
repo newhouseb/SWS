@@ -53,7 +53,7 @@ function populate(&$html, &$dict, &$links, &$path, $norw) {
     }
 }
 
-function renderPage($template, $page, $rw) {
+function renderPage($template, $page, $rw, $basepath="/") {
         // Get Simple Website Schema
         $xml = new DOMDocument();
         $xml->load($template);
@@ -145,7 +145,7 @@ function renderPage($template, $page, $rw) {
                 }
                 $ptr = $ptr->parentNode;
             }
-            $path = "/".$path;//str_repeat("../",($depth-1)/2).$path;
+            $path = $basepath.$path;//str_repeat("../",($depth-1)/2).$path;
 
             // Calculated how many "sub"s to add to this set of links (TODO: fix up this grossness)
             $prefix = str_repeat("sub", (2*count($sections) - 1 - $i)/2 + $offset);
@@ -222,7 +222,8 @@ function renderPage($template, $page, $rw) {
         // Set the css
         $css = $html->createElement("link");
         $css_href = $html->createAttribute("href");
-        $css_href->appendChild($html->createTextNode($xml->documentElement->getAttribute('css')));
+        $subpath = $xml->documentElement->getAttribute('css');
+        $css_href->appendChild($html->createTextNode(($subpath[0] == '/' ? "" : $basepath).$subpath));
         $css_rel = $html->createAttribute("rel");
         $css_rel->appendChild($html->createTextNode("stylesheet"));
         $css_type = $html->createAttribute("type");
@@ -236,7 +237,7 @@ function renderPage($template, $page, $rw) {
         //print_r($links);
 
         // Substitute all the IDs in the html with the corresponding page elements
-        $path = "/".implode("/",array_reverse($path_elements));
+        $path = $basepath.implode("/",array_reverse($path_elements));
         populate($html, $variables, $links, $path,!$rw);
 
         return $html->saveHTML();
@@ -263,11 +264,10 @@ function compilePages($template) {
                 $ptr = $ptr->parentNode;
             }
 
-
             // TODO: Sanitize these
             echo $path."...";
-            @mkdir("compiled/".$path, 0777, TRUE);
-            $fh = fopen("compiled/".$path."/index.html", "w");
+            @mkdir("compiled/".trim($path,"/"), 0777, TRUE);
+            $fh = fopen("compiled/".trim($path,"/")."/index.html", "w");
             fwrite($fh, renderPage($template, $path, TRUE));
             fclose($fh);
             

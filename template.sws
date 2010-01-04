@@ -1,4 +1,4 @@
-<site title="My Page" css="/base.css" template="base.tmpl">
+<site title="My Page" css="base.css" template="base.tmpl">
     <page link="Home">
         <header>Welcome</header>
         <content>Thanks for visiting</content>
@@ -6,5 +6,14 @@
     <page link="About">
         <header>About this page</header>
         <content>This page was made with <a href="http://bennewhouse.com/open_source/simple_website_schema">Simple Website Schema</a></content>
+        <subpages>
+            <page link="A">
+                <content>
+                    <a href="A">wee</a>
+                </content>
+            </page>
+            <page link="B">
+            </page>
+        </subpages>
     </page>
 </site>
