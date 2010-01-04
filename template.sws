@@ -1,6 +1,6 @@
 <site title="My Page" css="/test_sws/base.css" template="base.tmpl" 
         filepath="compiled" urlpath="/test_sws/compiled">
-    <page link="Home">
+    <page link="" name="Home">
         <header>Welcome</header>
         <content>Thanks for visiting</content>
     </page>
@@ -14,10 +14,13 @@
         <subpages>
             <page link="Subpage A">
                 <content>
-                    <a href="../Subpage B">Next Page</a>
+                    Aye
                 </content>
             </page>
             <page link="Subpage B">
+                <content>
+                    Bee
+                </content>
             </page>
         </subpages>
     </page>

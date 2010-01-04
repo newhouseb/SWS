@@ -1,18 +1,25 @@
 <?php
 
-function populate(&$html, &$dict, &$links, &$path, $norw) {
+function populate(&$html, &$dict, &$links, &$path, &$base, $norw) {
     if(!$html || $html->nodeType == XML_TEXT_NODE) return;
     
     // If mod_rewrite is not enabled, modify links
     if($html->nodeName == 'a' && $html->nodeType == XML_ELEMENT_NODE) {
-        $target = substr($html->getAttribute("href"),0);
+        $original_target = substr($html->getAttribute("href"),0);
+        $target = $original_target;
+
         if($target[0] != '/') {
-            $target = $path.'/'.$target;
+            $target = '/'.$base.$path.'/'.$target;
         }
-        if(in_array($target, $links)) {
-            if($norw)
-                $html->getAttributeNode("href")->nodeValue = $path."/?p=".$target;
-            else 
+
+        if(in_array($original_target, $links)) {
+            if($norw) {
+                // Chop off base path, for terseness
+                if(strstr($target, $base))
+                    $target = substr($target, strlen($base));
+
+                $html->getAttributeNode("href")->nodeValue = rtrim($base,"/")."/?p=".$target;
+            } else 
                 $html->getAttributeNode("href")->nodeValue = $target;
         }
     }       
@@ -40,7 +47,7 @@ function populate(&$html, &$dict, &$links, &$path, $norw) {
             if(!$replacement) { 
                 $replacement = $dict[$element->tagName];
                 if($replacement) {
-                    populate($imported_element, $dict, $links, $path, $norw);
+                    populate($imported_element, $dict, $links, $path, $base, $norw);
                     foreach($replacement->childNodes as $child) {
                         $imported_element = $html->ownerDocument->importNode($child, TRUE);
                         $element->parentNode->insertBefore($imported_element, $element);
@@ -48,12 +55,15 @@ function populate(&$html, &$dict, &$links, &$path, $norw) {
                     $element->parentNode->removeChild($element);
                 }
             }
-            populate($element, $dict, $links, $path, $norw);
+            populate($element, $dict, $links, $path, $base, $norw);
         }
     }
 }
 
 function renderPage($template, $page, $rw, $basepath="/") {
+        // TODO: refactor this so we don't overrite it
+        $pagename = $page;
+
         // Get Simple Website Schema
         $xml = new DOMDocument();
         $xml->load($template);
@@ -157,6 +167,7 @@ function renderPage($template, $page, $rw, $basepath="/") {
             $query = $xml_xpath->query("page", $scope);
             foreach($query as $page) {
                 $link = (string) $page->getAttribute("link");
+                $name = (string) $page->getAttribute("name");
                 $links[] = $path.$link;
 
                 // If they're not hidden, link them
@@ -167,7 +178,7 @@ function renderPage($template, $page, $rw, $basepath="/") {
                     $link_href = $xml->createAttribute("href");
                     $link_href->appendChild($xml->createTextNode($ref ? $ref : $path.$link));
                     $link_node->appendChild($link_href);
-                    $link_node->appendChild($xml->createTextNode($link));
+                    $link_node->appendChild($xml->createTextNode($name ? $name : $link));
 
                     if(in_array($link, $path_elements)) {
                         $link_style = $xml->createAttribute("class");
@@ -237,8 +248,9 @@ function renderPage($template, $page, $rw, $basepath="/") {
         //print_r($links);
 
         // Substitute all the IDs in the html with the corresponding page elements
-        $path = $basepath.implode("/",array_reverse($path_elements));
-        populate($html, $variables, $links, $path,!$rw);
+        $path = rtrim($pagename,"/")."/";
+
+        populate($html, $variables, $links, $path, $basepath, !$rw);
 
         return $html->saveHTML();
 }

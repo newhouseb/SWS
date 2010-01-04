@@ -11,3 +11,6 @@ RewriteCond %{REQUEST_URI} !/?other/?$
 RewriteCond %{REQUEST_URI} !compiled
 RewriteCond %{REQUEST_URI} !\.[a-z]{3,4}$
 RewriteRule [^.]?/$ index.php?rw=t&p=%{REQUEST_URI} [L] 
+
+# Enable lockin of rewrite for empty index
+RewriteRule ^$ index.php?rw=t [L] 

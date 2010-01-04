@@ -1,8 +1,7 @@
 <?php
 include('library.php');
 // Get the relative path of the current directory
-// TODO: Replace this with PHP_SELF?
-$path = substr($_SERVER['SCRIPT_FILENAME'], strlen($_SERVER['DOCUMENT_ROOT']));
+$path = $_SERVER['PHP_SELF'];
 $path = substr($path, 0, strlen($path) - strlen("index.php"));
 
 // Check to see if we need to statically compile this
@@ -14,5 +13,9 @@ if($xml->documentElement->getAttribute("urlpath") && $xml->documentElement->getA
 }
 
 // Render the page
-echo renderPage('template.sws',substr(urldecode($_REQUEST['p']), strlen($path)),$_GET['rw'], $path);
+$page = urldecode($_REQUEST['p']);
+if(strstr($page, $path))
+    $page = substr($page, strlen($path));
+
+echo renderPage('template.sws',$page,$_GET['rw'], $path);
 ?>
