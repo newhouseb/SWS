@@ -65,8 +65,8 @@ main.css - Your run of the mill CSS stylesheet (empty for this example)
 
 **History**
 
-January 3rd, 2010 - Static Compilation added, added a rewrite rule to force append slashes
-December 24, 2009 - Initial Release
+- January 3rd, 2010 - Static Compilation added, added a rewrite rule to force append slashes
+- December 24, 2009 - Initial Release
 
 **Known Bugs**
 
